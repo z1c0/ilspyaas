@@ -2,6 +2,9 @@
 .body-content {
     margin-top: 75px;
 }
+.boxIcon {
+  fill: white;
+}
 .file-area {
     width: 100%;
     position: relative;
@@ -53,7 +56,7 @@
     margin: 0;
     padding: 0;
 
-    background: #053777;
+    background: #196bd6;
     color: #fff;
 
   }
