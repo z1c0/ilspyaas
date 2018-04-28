@@ -17,7 +17,7 @@ namespace ilspyaas.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View("Upload");
         }
 
         public IActionResult About()
@@ -28,7 +28,7 @@ namespace ilspyaas.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Decompile(IFormFile formFile, string typeName)
+        public async Task<IActionResult> Decompile(IFormFile formFile)
         {
             var result = new ResultViewModel();
             try
@@ -42,6 +42,7 @@ namespace ilspyaas.Controllers
                         await formFile.CopyToAsync(stream);
                     }
                     var decompiler = GetDecompiler(filePath);
+                    var typeName = string.Empty;
                     if (string.IsNullOrEmpty(typeName)) {
                         result.Code = decompiler.DecompileWholeModuleAsString();
                     } else {
