@@ -43,7 +43,7 @@
     background-color: rgba(0, 255, 0, 0.3);
   }
   .file-area input[type="file"]:valid + .file-dummy .success {
-    display: inline-block;
+    display: block;
   }
   .file-area input[type="file"]:valid + .file-dummy .default {
     display: none;

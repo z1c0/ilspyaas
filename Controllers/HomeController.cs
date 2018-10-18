@@ -49,7 +49,7 @@ namespace ilspyaas.Controllers
                         var name = new FullTypeName(typeName);
                         result.Code = decompiler.DecompileTypeAsString(name);
                     }      
-                    //File.Delete(filePath);          
+                    System.IO.File.Delete(filePath);
                 }
             }
             catch (Exception) {
@@ -60,7 +60,11 @@ namespace ilspyaas.Controllers
 
 		static CSharpDecompiler GetDecompiler(string assemblyFileName)
 		{
-			return new CSharpDecompiler(assemblyFileName, new DecompilerSettings() {  ThrowOnAssemblyResolveErrors = false });
+			return new CSharpDecompiler(assemblyFileName, new DecompilerSettings() 
+            {
+                ThrowOnAssemblyResolveErrors = false,
+                LoadInMemory = true
+            });
 		}
 
         public IActionResult Error()
