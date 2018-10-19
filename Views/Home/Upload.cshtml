@@ -14,10 +14,13 @@
   </div>
 </form>
 
-<!-- <div>
-    <p>Try with existing samples</p>
-   <button type="submit">helloworld</button>
-   <button type="submit">mscorlib</button>
-</div> -->
+<div>
+	<form method="get" asp-controller="Home" asp-action="Decompile" novalidate class="box">
+    <p>Try it out for existing existing assemblies</p>
+    <!-- <button type="submit" name="wellknown" value="mscorlib">mscorlib</button> -->
+    <button type="submit" name="wellknown" value="Microsoft.AspNetCore">AspNetCore</button>
+    <button type="submit" name="wellknown" value="hello">helloworld</button>
+	</form>
+</div>
 
 </div>

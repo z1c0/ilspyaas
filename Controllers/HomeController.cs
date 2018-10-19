@@ -10,11 +10,20 @@ using System.IO;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.TypeSystem;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ilspyaas.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public HomeController(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         public IActionResult Index()
         {
             return View("Upload");
@@ -27,9 +36,27 @@ namespace ilspyaas.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Decompile(string wellknown)
+        {
+            var result = new ResultViewModel();
+            var path = Path.Combine(_hostingEnvironment.WebRootPath, string.Format($"data/{wellknown}.dll"));
+            if (System.IO.File.Exists(path))
+            {
+                result.Code = DecompileAssembly(path);
+            }
+            else 
+            {
+                result.Error = "Invalid operation";
+            }
+            return View(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Decompile(IFormFile formFile)
         {
+            // TODO: logging
+            // TODO: error page
             var result = new ResultViewModel();
             try
             {
@@ -41,24 +68,34 @@ namespace ilspyaas.Controllers
                     {
                         await formFile.CopyToAsync(stream);
                     }
-                    var decompiler = GetDecompiler(filePath);
-                    var typeName = string.Empty;
-                    if (string.IsNullOrEmpty(typeName)) {
-                        result.Code = decompiler.DecompileWholeModuleAsString();
-                    } else {
-                        var name = new FullTypeName(typeName);
-                        result.Code = decompiler.DecompileTypeAsString(name);
-                    }      
+                    result.Code = DecompileAssembly(filePath);
                     System.IO.File.Delete(filePath);
                 }
             }
-            catch (Exception) {
-
+            catch (Exception e) {
+                result.Error = e.ToString();
             }
             return View(result);
         }
 
-		static CSharpDecompiler GetDecompiler(string assemblyFileName)
+        private static string DecompileAssembly(string filePath)
+        {
+            var code = string.Empty;
+            var decompiler = GetDecompiler(filePath);
+            var typeName = string.Empty;
+            if (string.IsNullOrEmpty(typeName))
+            {
+                code = decompiler.DecompileWholeModuleAsString();
+            }
+            else
+            {
+                var name = new FullTypeName(typeName);
+                code = decompiler.DecompileTypeAsString(name);
+            }
+            return code;
+        }
+
+        static CSharpDecompiler GetDecompiler(string assemblyFileName)
 		{
 			return new CSharpDecompiler(assemblyFileName, new DecompilerSettings() 
             {
