@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.6.375" />
     <PackageReference Include="ICSharpCode.Decompiler" Version="3.1.0.3652" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.15" />
   </ItemGroup>
 
 </Project>
